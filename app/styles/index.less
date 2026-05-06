@@ -1,0 +1,354 @@
+// @import "../../node_modules/bootstrap/less/bootstrap.less";
+@import (less) "../../node_modules/chartist/dist/chartist.min.css";
+@import (less) "../../node_modules/flexboxgrid/dist/flexboxgrid.min.css";
+@import (less) "./slider.less";
+@import (less) "./checkbox.css";
+@import (less) "./chartist_modifications.less";
+@import (less) "./beat_visualization.less";
+@import (less) "./claviature.less";
+@import (less) "./star_animation.less";
+
+@import url(http://fonts.googleapis.com/css?family=Poiret+One);
+@import url(http://fonts.googleapis.com/css?family=Droid+Sans:400);
+
+/* index.less */
+
+body {
+  font-family: "Droid Sans", sans-serif;
+}
+
+.site {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+.site-content {
+  flex: 1;
+}
+
+footer {
+  background-color: rgb(10, 10, 10);
+  width: 100%;
+  min-height: 50px;
+  padding: 1.5rem;
+  color: #999;
+  text-align: center;
+  border-top: 1px rgba(255, 255, 255, 0.15) solid;
+  margin-top: 60px;
+  a {
+    color: rgba(255, 255, 255, 0.8);
+    &:hover {
+      color: rgba(255, 255, 255, 0.9);
+    }
+  }
+  h2 {
+    color: #ececec;
+  }
+  div.left {
+    text-align: left;
+  }
+
+  .subscribe-follow-section {
+    margin-bottom: 30px;
+  }
+
+  .form-control:focus {
+    border-color: #e0e0e0;
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(224, 224, 224, 0.6);
+  }
+
+  .btn,
+  .btn:focus {
+    transition: all 0.5s ease;
+    background-color: transparent;
+    border: 1px solid white;
+    color: white;
+    outline: none;
+    &:hover,
+    &:active {
+      background-color: rgba(255, 255, 255, 0.15);
+      border-color: white;
+    }
+  }
+
+  .follow-section {
+    i {
+      font-size: 20px;
+    }
+    .btn {
+      margin-right: 5px;
+    }
+  }
+}
+
+// override some cookie consent styles
+.cc_container {
+  border-radius: 5px;
+  background: rgba(0, 0, 0, 0.7);
+  font-family: "Droid Sans", sans-serif !important;
+  @media screen and (min-width: 500px) {
+    bottom: 60px;
+  }
+}
+
+.jumbotron {
+  background-color: rgba(0, 0, 0, 0.7);
+  padding-top: 24px;
+  padding-bottom: 5px;
+  border-bottom: 1px rgba(255, 255, 255, 0.7) solid;
+  margin-bottom: 60px;
+}
+
+.jumbotron > h1 {
+  /*Kozuka Gothic ...*/
+  text-align: center;
+  font-family: "Poiret One", sans-serif;
+  font-size: 70pt;
+  font-weight: 100;
+  color: white;
+  font-variant: small-caps;
+}
+
+.jumbotron > h3 {
+  text-align: center;
+  color: white;
+  margin-top: 10px;
+  font-family: "Poiret One", sans-serif;
+  margin-bottom: 20px;
+}
+
+#image-background {
+  min-height: 100%;
+  min-width: 1600px;
+  width: 100%;
+  height: auto;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+#github {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+h1 {
+  font-size: 50*2px;
+}
+
+.box-shadow {
+  -webkit-box-shadow: 0px 0px 30px 0px rgba(0, 0, 0, 1);
+  -moz-box-shadow: 0px 0px 30px 0px rgba(0, 0, 0, 1);
+  box-shadow: 0px 0px 30px 0px rgba(0, 0, 0, 1);
+  border-radius: 4px;
+}
+
+.stat-detail i {
+  margin-right: 5px;
+}
+
+.content-box {
+  .box-shadow;
+  background: white;
+
+  @media only screen and (max-width: 700px) {
+    padding: 20px 1px;
+  }
+
+  @media only screen and (min-width: 700px) {
+    padding: 50px 50px 20px 50px;
+  }
+}
+
+.settings {
+  padding: 20px;
+  margin-bottom: 3rem;
+  background: white;
+  width: 100%;
+}
+
+.graph-stats {
+  background: white;
+  margin-bottom: 3rem;
+  padding: 20px;
+}
+
+.game-container {
+  margin-bottom: 3rem;
+  overflow: hidden;
+}
+
+.claviature-container {
+  padding: 0 5px 5px 5px;
+  margin-bottom: 3rem;
+}
+
+.leftColumn {
+  max-width: 700px;
+  @media only screen and (min-width: 64em) {
+    margin-right: 3rem;
+  }
+}
+
+.rightColumn {
+  max-width: 400px;
+}
+
+.modeNavItem:first-child {
+  margin-right: 5px;
+}
+
+.modeNavItem a {
+  transition: all 0.5s ease;
+}
+
+li.modeNavItem a,
+li.modeNavItem a:focus {
+  background-color: transparent;
+  border: 1px solid white;
+  color: white;
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+  }
+}
+
+li.modeNavItem.active a:focus,
+li.modeNavItem.active a {
+  background-color: white;
+  border: 1px solid white;
+  color: black;
+  &:hover {
+    color: white;
+    background-color: rgba(255, 255, 255, 0.15);
+  }
+}
+
+.transition {
+  transition: max-height 0.4s ease, height 0.4s ease, margin 0.4s ease, opacity 0.75s ease;
+  opacity: 1;
+  overflow: hidden;
+}
+
+.collapsed {
+  max-height: 0px;
+  margin: 0px;
+}
+
+.opacityOut {
+  opacity: 0;
+}
+
+.message {
+  text-align: center;
+  padding-left: 0px;
+  padding-top: 0px;
+}
+
+.gameButton {
+  margin-left: 10px;
+  margin-right: 10px;
+  @media only screen and (max-width: 450px) {
+    width: 80%;
+    margin-bottom: 1rem;
+  }
+  .gameButton-label {
+    font-size: 18px;
+  }
+  @media only screen and (max-height: 500px) {
+    span.subtext {
+      display: none;
+    }
+  }
+}
+
+.settingLine .settingUI {
+  @media only screen and (max-width: 48em) {
+    margin-bottom: 0.5rem;
+  }
+}
+
+.hr_gradient {
+  margin: 25px 0;
+  height: 1px;
+  background: black;
+  background: -webkit-gradient(
+    linear,
+    0 0,
+    100% 0,
+    from(rgba(255, 255, 255, 0)),
+    to(rgba(255, 255, 255, 0)),
+    color-stop(50%, white)
+  );
+}
+
+.inlineBlock {
+  display: inline-block;
+}
+
+// workaround for https://github.com/kristoferjoseph/flexboxgrid/issues/144
+.row {
+  width: 99%;
+  margin-left: 0.5%;
+}
+
+.noSelect {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.noPointerEvents {
+  pointer-events: none;
+}
+
+.displayNone {
+  display: none;
+}
+
+.gameContainer {
+  white-space: nowrap;
+  overflow: hidden;
+  vertical-align: top;
+
+  .trainer {
+    vertical-align: top;
+    transition: margin-left 0.5s ease, max-height 0.5s ease;
+
+    display: inline-block;
+    white-space: initial;
+    max-height: 5000px;
+    width: 100%;
+  }
+
+  .trainerHidden1 {
+    margin-left: -100%;
+    max-height: 0px;
+  }
+  .trainerHidden2 {
+    margin-left: 100%;
+    max-height: 0px;
+  }
+}
+
+.pitchStatusBar {
+  margin: 0 auto 2rem auto;
+  max-width: 1110px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 18px;
+  background: rgba(255, 255, 255, 0.94);
+}
+
+.pitchStatusItem {
+  font-size: 16px;
+}

@@ -1,0 +1,48 @@
+{
+  "name": "Piano-Trainer",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/philippotto/Piano-Trainer"
+  },
+  "author": "Philipp Otto <philippotto@live.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/philippotto/Piano-Trainer",
+  "dependencies": {
+    "bootstrap": "^3.3.6",
+    "chartist": "^0.9.7",
+    "classnames": "^2.2.3",
+    "flexboxgrid": "^6.3.0",
+    "font-awesome": "^4.5.0",
+    "freezer-js": "git+https://github.com/philippotto/freezer.git#native-object-handling-build",
+    "lodash": "^4.5.1",
+    "prop-types": "^15.5.10",
+    "rc-slider": "^8.3.1",
+    "react": "^16.0.0",
+    "react-bootstrap": "^0.31.1",
+    "react-dom": "^16.0.0",
+    "react-motion": "^0.5.0",
+    "vexflow": "^1.2.41"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.7.0",
+    "eslint": "^3.14.1",
+    "eslint-plugin-react": "^7.4.0",
+    "less": "^2.6.0",
+    "prettier": "^1.7.4",
+    "vite": "^5.4.19",
+    "vitest": "^2.1.8",
+    "jsdom": "^25.0.1"
+  },
+  "scripts": {
+    "dev": "vite",
+    "start": "vite",
+    "build": "vite build",
+    "lint": "eslint . && prettier --list-different '**/*.{js,jsx,ts,css,less,scss,json}'",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "pretty": "prettier --write '**/*.{js,jsx,ts,css,less,scss,json}'"
+  }
+}
