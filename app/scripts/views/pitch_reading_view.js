@@ -192,6 +192,16 @@ export default class PitchReadingView extends Component {
     this.startDate = new Date();
   }
 
+  resetStats() {
+    this.props.statisticService.reset();
+    this.setState({
+      comboCount: 0,
+      lastEarnedCoins: 0,
+    });
+    this.saveComboRewards(0, this.state.coins);
+    this.startDate = new Date();
+  }
+
   startPitchMetronome() {
     if (!this.props.settings.useMetronome) {
       return;
@@ -329,9 +339,9 @@ export default class PitchReadingView extends Component {
     return (
       <div className={classNames({ trainer: true, trainerHidden1: !this.props.isActive })}>
         <div className="pitchStatusBar content-box">
-                    <div className="pitchStatusItem">
+          <div className="pitchStatusItem">
             Avg reaction: {" "}
-            <strong>{Math.round(this.props.statisticService.getAverageTimeOfLast(10))} ms</strong>
+            <strong>{Math.round(this.props.statisticService.getAverageTimeOfLast(50))} ms</strong>
           </div>
           <div className="pitchStatusItem">
             Coins: <strong>{this.state.coins}</strong>
@@ -344,6 +354,11 @@ export default class PitchReadingView extends Component {
           </div>
           <div className="pitchStatusItem">
             Last reward: <strong>+{this.state.lastEarnedCoins}</strong>
+          </div>
+          <div className="pitchStatusItem">
+            <button type="button" onClick={this.resetStats.bind(this)}>
+              Reset Stat
+            </button>
           </div>
         </div>
         <div className="row center-lg center-md center-sm center-xs">

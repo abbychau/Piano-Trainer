@@ -46,7 +46,7 @@ export default class PitchStatisticView extends Component {
               <span className="stat-detail">
                 <i className="fa fa-clock-o" />
                 <AnimatedNumber
-                  number={statistics.getAverageTimeOfLast(100) / 1000}
+                  number={statistics.getAverageTimeOfLast(50) / 1000}
                   formatter={el => el.toFixed(2) + "s"}
                 />
               </span>

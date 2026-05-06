@@ -46,6 +46,11 @@ class PitchStatisticService {
     return localStorage.setItem(localStoragePitchStatsKey, JSON.stringify(this.stats));
   }
 
+  reset() {
+    this.stats = [];
+    return this.save();
+  }
+
   getSuccessCount() {
     return _(this.stats)
       .filter(el => el.success)
