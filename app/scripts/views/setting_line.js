@@ -9,6 +9,7 @@ export default class SettingLine extends Component {
   static propTypes = {
     children: PropTypes.node,
     label: PropTypes.string,
+    value: PropTypes.node,
     className: PropTypes.string,
   };
 
@@ -17,16 +18,27 @@ export default class SettingLine extends Component {
   }
 
   render() {
-    let className = "settingLine row around-xs";
+    let className = "settingLine row";
     if (this.props.className) {
       className = [className, this.props.className].join(" ");
     }
     return (
-      <div className={className}>
-        <div className="col-lg-6 col-md-6 col-sm-6 col-xs-12" style={{ textAlign: "left" }}>
+      <div className={className} style={{ marginTop: 4, marginBottom: 4, fontSize: 12 }}>
+        <div className="col-lg-4 col-md-4 col-sm-12 col-xs-12" style={{ textAlign: "right", padding:0 }}>
           {this.props.label}
         </div>
-        <div className="settingUI col-lg-6 col-md-6 col-sm-6 col-xs-12">{this.props.children}</div>
+        <div
+          className="settingValue col-lg-2 col-md-2 col-sm-12 col-xs-12"
+          style={{ textAlign: "left" }}
+        >
+          {this.props.value != null ? this.props.value : null}
+        </div>
+        <div
+          className="settingUI col-lg-5 col-md-5 col-sm-12 col-xs-12"
+          style={{ textAlign: "left" }}
+        >
+          {this.props.children}
+        </div>
       </div>
     );
   }

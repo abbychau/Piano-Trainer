@@ -64,11 +64,11 @@ export default class RangeSettingComponent extends Component {
       marginBottom: -2,
     };
 
-    const valueLabel =
-      this.props.label + ": " + this.state.values.map(this.props.valueToString).join(" - ");
+    const label = this.props.label;
+    const valueText = this.state.values.map(this.props.valueToString).join(" - ");
 
     return (
-      <SettingLine label={valueLabel}>
+      <SettingLine label={label} value={valueText}>
         <div style={rangeContainerStyle}>
           <Range
             value={this.state.values}

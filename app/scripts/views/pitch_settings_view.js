@@ -132,7 +132,7 @@ export default class PitchSettingsView extends Component {
           <label htmlFor="try_to_use_midi_checkbox" />
         </SettingLine>
         {tryToUseMidi ? (
-          <SettingLine label="Midi device">
+          <SettingLine label="Midi device:">
             <select
               name="select"
               onChange={this.onMidiSelectChange.bind(this)}
@@ -206,7 +206,7 @@ export default class PitchSettingsView extends Component {
           values={this.props.settings.metronomeBeatDuration}
           onChange={this.buildStateChanger("metronomeBeatDuration")}
           valueToString={el => `${el}ms`}
-          label={"Metronome beat"}
+          label={"Metronome beat:"}
           disabled={!this.props.settings.useMetronome}
         />
         <SettingLine className="setting_checkbox" label="Subdivision click:">
@@ -225,7 +225,7 @@ export default class PitchSettingsView extends Component {
           values={this.props.settings.metronomeTimingWindow}
           onChange={this.buildStateChanger("metronomeTimingWindow")}
           valueToString={el => `${el}ms`}
-          label={"Timing window"}
+          label={"Timing window:"}
           disabled={!this.props.settings.useMetronome}
         />
         <RangeSettingComponent
@@ -234,7 +234,7 @@ export default class PitchSettingsView extends Component {
           values={this.props.settings.metronomeBonusCoins}
           onChange={this.buildStateChanger("metronomeBonusCoins")}
           valueToString={el => `+${el}`}
-          label={"On-beat bonus"}
+          label={"On-beat bonus:"}
           disabled={!this.props.settings.useMetronome}
         />
         <RangeSettingComponent
@@ -243,7 +243,7 @@ export default class PitchSettingsView extends Component {
           values={this.props.settings.successSoundVolume}
           onChange={this.buildStateChanger("successSoundVolume")}
           valueToString={el => `${el}%`}
-          label={"Volume"}
+          label={"Volume:"}
         />
         <SettingLine className="setting_checkbox" label="Reference sound:">
           <input
@@ -264,7 +264,7 @@ export default class PitchSettingsView extends Component {
           label={"Reference volume"}
           disabled={!this.props.settings.playReferenceSound}
         />
-        <SettingLine label="Exercise length">
+        <SettingLine label="Exercise length:">
           <select
             name="pitch_exercise_length"
             value={this.props.settings.exerciseLength || 4}
@@ -285,7 +285,7 @@ export default class PitchSettingsView extends Component {
             to: this.props.settings.chordSizeRanges.treble[1],
           }}
           onChange={this.buildStateChanger("chordSizeRanges.treble")}
-          label={"Treble notes/chord"}
+          label={"Treble notes/chord:"}
           disabled={!isMidiAvailable}
         />
         <RangeSettingComponent
@@ -296,7 +296,7 @@ export default class PitchSettingsView extends Component {
             to: this.props.settings.chordSizeRanges.bass[1],
           }}
           onChange={this.buildStateChanger("chordSizeRanges.bass")}
-          label={"Bass notes/chord"}
+          label={"Bass notes/chord:"}
           disabled={!isMidiAvailable}
         />
         <RangeSettingComponent
@@ -308,7 +308,7 @@ export default class PitchSettingsView extends Component {
           }}
           onChange={this.buildStateChanger("noteRanges.treble")}
           valueToString={index => this.pitchRangeValueToString("treble", index)}
-          label={"Treble note range"}
+          label={"Treble note range:"}
         />
         <RangeSettingComponent
           rangeMin={0}
@@ -319,7 +319,7 @@ export default class PitchSettingsView extends Component {
           }}
           onChange={this.buildStateChanger("noteRanges.bass")}
           valueToString={index => this.pitchRangeValueToString("bass", index)}
-          label={"Bass note range"}
+          label={"Bass note range:"}
         />
         <RangeSettingComponent
           rangeMin={0}
@@ -330,7 +330,7 @@ export default class PitchSettingsView extends Component {
           }}
           onChange={this.buildStateChanger("keySignature")}
           valueToString={KeyConverter.keySignatureValueToString}
-          label={"Signature"}
+          label={"Signature:"}
         />
       </div>
     );
@@ -339,7 +339,7 @@ export default class PitchSettingsView extends Component {
       <div className="settings content-box">
         <h3 style={{ marginTop: -5 }}>Settings</h3>
         {deviceSelector}
-        <SettingLine className="setting_checkbox" label="Automatic difficulty:">
+        <SettingLine className="setting_checkbox" label="Auto difficulty:">
           <input
             type="checkbox"
             checked={useAutomaticDifficulty}
