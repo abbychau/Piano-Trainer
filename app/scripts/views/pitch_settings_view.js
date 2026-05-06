@@ -58,6 +58,52 @@ export default class PitchSettingsView extends Component {
     this.buildStateChanger("exerciseLength")(nextLength);
   }
 
+  resetPitchSettingsToDefault() {
+    const defaultPitchReadingSettings = {
+      useAutomaticDifficulty: false,
+      automaticDifficulty: {
+        accuracyGoal: 0.85,
+        timeGoal: 2000,
+        amount: 5,
+        newNotesShare: 0.6,
+      },
+      chordSizeRanges: {
+        treble: [1, 1],
+        bass: [0, 0],
+      },
+      noteRanges: {
+        treble: [0, 7],
+        bass: [0, 13],
+      },
+      successSoundVolume: 70,
+      playReferenceSound: true,
+      referenceSoundVolume: 55,
+      useMetronome: false,
+      metronomeUseSubdivisionClick: false,
+      metronomeBeatDuration: 1000,
+      metronomeTimingWindow: 120,
+      metronomeBonusCoins: 2,
+      keySignature: [7, 7],
+      exerciseLength: 4,
+      useAccidentals: false,
+      tryToUseMidi: true,
+      midi: {
+        activeInputIndex: 0,
+      },
+    };
+
+    const midiInputs = this.props.settings.midi.inputs;
+    this.props.settings.reset({
+      ...defaultPitchReadingSettings,
+      midi: {
+        ...defaultPitchReadingSettings.midi,
+        inputs: midiInputs,
+      },
+    });
+
+    AnalyticsService.sendEvent("PitchReading-Settings", "reset-all-to-default");
+  }
+
   pitchRangeValueToString(clef, index) {
     const levels = clef === "treble" ? [4, 5] : [2, 3];
     const notes = "cdefgab".split("");
@@ -302,6 +348,11 @@ export default class PitchSettingsView extends Component {
             onChange={this.buildCheckboxStateChanger("useAutomaticDifficulty")}
           />
           <label htmlFor="automatic_difficulty_checkbox" />
+        </SettingLine>
+        <SettingLine label="Reset settings">
+          <button type="button" onClick={this.resetPitchSettingsToDefault.bind(this)}>
+            Reset all to default
+          </button>
         </SettingLine>
         {useAutomaticDifficulty ? automaticDifficultySection : manualDifficultySection}
       </div>

@@ -2,7 +2,7 @@ import Freezer from "freezer-js";
 
 let defaultSettings = {
   pitchReading: {
-    useAutomaticDifficulty: true,
+    useAutomaticDifficulty: false,
     automaticDifficulty: {
       accuracyGoal: 0.85,
       timeGoal: 2000,
@@ -10,11 +10,11 @@ let defaultSettings = {
       newNotesShare: 0.6,
     },
     chordSizeRanges: {
-      treble: [1, 3],
-      bass: [1, 3],
+      treble: [1, 1],
+      bass: [0, 0],
     },
     noteRanges: {
-      treble: [0, 13],
+      treble: [0, 7],
       bass: [0, 13],
     },
     successSoundVolume: 70,
