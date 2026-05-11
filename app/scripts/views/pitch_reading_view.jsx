@@ -3,17 +3,17 @@ import PropTypes from "prop-types";
 import classNames from "classnames";
 import _ from "lodash";
 
-import PitchStatisticView from "../views/pitch_statistic_view.js";
-import PitchSettingsView from "../views/pitch_settings_view.js";
+import PitchStatisticView from "../views/pitch_statistic_view.jsx";
+import PitchSettingsView from "../views/pitch_settings_view.jsx";
 import AnalyticsService from "../services/analytics_service.js";
 import MidiService from "../services/midi_service.js";
 import BarGenerator from "../services/bar_generator.js";
 import LevelService from "../services/level_service.js";
 import PitchAudioService from "../services/pitch_audio_service.js";
-import StaveRenderer from "./stave_renderer.js";
+import StaveRenderer from "./stave_renderer.jsx";
 import ClaviatureView from "./claviature_view";
-import GameButton from "./game_button.js";
-import CollapsableContainer from "./collapsable_container.js";
+import GameButton from "./game_button.jsx";
+import CollapsableContainer from "./collapsable_container.jsx";
 import MetronomeService from "../services/metronome_service.js";
 import KeyConverter from "../services/key_converter.js";
 
@@ -44,6 +44,7 @@ export default class PitchReadingView extends Component {
       errorCallback: this.onMidiError.bind(this),
       errorResolveCallback: this.onMidiErrorResolve.bind(this),
       noteOnCallback: this.onMidiNoteOn.bind(this),
+      noteOffCallback: this.onMidiNoteOff.bind(this),
     });
     this.startDate = new Date();
     this.midiService.setDesiredKeys(this.getAllCurrentKeys(), this.state.currentKeySignature);
@@ -93,6 +94,7 @@ export default class PitchReadingView extends Component {
       if (
         shouldRegenerateAll ||
         nextSettings.exerciseLength !== prevSettings.exerciseLength ||
+        nextSettings.maxDistance !== prevSettings.maxDistance ||
         nextChordSizeRanges.treble !== chordSizeRanges.treble ||
         nextChordSizeRanges.bass !== chordSizeRanges.bass ||
         nextSettings.noteRanges.treble !== prevSettings.noteRanges.treble ||
@@ -209,7 +211,7 @@ export default class PitchReadingView extends Component {
     this.stopPitchMetronome();
     const beatDuration = this.props.settings.metronomeBeatDuration;
     this.lastMetronomeBeatAt = performance.now();
-    const useSubdivision = this.props.settings.metronomeUseSubdivisionClick;
+    const useSubdivision = !this.props.settings.metronomeUseSubdivisionClick;
     const subdivisionStep = useSubdivision ? beatDuration / 2 : beatDuration;
     this.metronomeTickIndex = 0;
     this.metronomeIntervalId = setInterval(() => {
@@ -454,7 +456,14 @@ export default class PitchReadingView extends Component {
     if (!this.state.running) {
       return;
     }
-    PitchAudioService.playMidiNumbers([keyNumber], this.props.settings.referenceSoundVolume);
+    PitchAudioService.noteOnMidiNumber(keyNumber, this.props.settings.referenceSoundVolume);
+  }
+
+  onMidiNoteOff(keyNumber) {
+    if (!this.state.running) {
+      return;
+    }
+    PitchAudioService.noteOffMidiNumber(keyNumber);
   }
 
   onVirtualKeyPlay(noteName) {

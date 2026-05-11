@@ -6,13 +6,13 @@ import BarGenerator from "../services/bar_generator.js";
 import RhythmChecker from "../services/rhythm_checker.js";
 import AnalyticsService from "../services/analytics_service.js";
 
-import StaveRenderer from "./stave_renderer.js";
-import GameButton from "./game_button.js";
-import RhythmSettingsView from "./rhythm_settings_view.js";
-import RhythmStatisticView from "./rhythm_statistic_view.js";
-import BeatVisualization from "./beat_visualization.js";
-import CollapsableContainer from "./collapsable_container.js";
-import MetronomeView from "./metronome_view.js";
+import StaveRenderer from "./stave_renderer.jsx";
+import GameButton from "./game_button.jsx";
+import RhythmSettingsView from "./rhythm_settings_view.jsx";
+import RhythmStatisticView from "./rhythm_statistic_view.jsx";
+import BeatVisualization from "./beat_visualization.jsx";
+import CollapsableContainer from "./collapsable_container.jsx";
+import MetronomeView from "./metronome_view.jsx";
 
 const keyup = "keyup";
 const keydown = "keydown";

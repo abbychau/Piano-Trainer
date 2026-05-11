@@ -17,6 +17,7 @@ let defaultSettings = {
       treble: [0, 7],
       bass: [0, 13],
     },
+    maxDistance: 13,
     successSoundVolume: 70,
     playReferenceSound: true,
     referenceSoundVolume: 55,
@@ -36,6 +37,8 @@ let defaultSettings = {
   },
   rhythmReading: {
     barDuration: 3000,
+    offsetMs: 0,
+    metronomeUseSubdivisionClick: false,
     labelBeats: true,
     liveBeatBars: false,
     rests: true,
@@ -53,6 +56,10 @@ if (savedSettings) {
   parsedSettings.pitchReading.midi.inputs = defaultSettings.pitchReading.midi.inputs;
   parsedSettings.pitchReading.noteRanges =
     parsedSettings.pitchReading.noteRanges || defaultSettings.pitchReading.noteRanges;
+  parsedSettings.pitchReading.maxDistance =
+    parsedSettings.pitchReading.maxDistance == null
+      ? defaultSettings.pitchReading.maxDistance
+      : parsedSettings.pitchReading.maxDistance;
   parsedSettings.pitchReading.successSoundVolume =
     parsedSettings.pitchReading.successSoundVolume == null
       ? defaultSettings.pitchReading.successSoundVolume
@@ -85,6 +92,15 @@ if (savedSettings) {
     parsedSettings.pitchReading.metronomeBonusCoins == null
       ? defaultSettings.pitchReading.metronomeBonusCoins
       : parsedSettings.pitchReading.metronomeBonusCoins;
+  parsedSettings.rhythmReading = parsedSettings.rhythmReading || defaultSettings.rhythmReading;
+  parsedSettings.rhythmReading.offsetMs =
+    parsedSettings.rhythmReading.offsetMs == null
+      ? defaultSettings.rhythmReading.offsetMs
+      : parsedSettings.rhythmReading.offsetMs;
+  parsedSettings.rhythmReading.metronomeUseSubdivisionClick =
+    parsedSettings.rhythmReading.metronomeUseSubdivisionClick == null
+      ? defaultSettings.rhythmReading.metronomeUseSubdivisionClick
+      : parsedSettings.rhythmReading.metronomeUseSubdivisionClick;
   parsedSettings.pitchReading.exerciseLength =
     parsedSettings.pitchReading.exerciseLength == null
       ? defaultSettings.pitchReading.exerciseLength

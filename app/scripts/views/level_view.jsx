@@ -2,7 +2,7 @@ import _ from "lodash";
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import LevelService from "../services/level_service.js";
-import PieChart from "../views/pie_chart.js";
+import PieChart from "../views/pie_chart.jsx";
 
 export default class LevelView extends Component {
   static propTypes = {

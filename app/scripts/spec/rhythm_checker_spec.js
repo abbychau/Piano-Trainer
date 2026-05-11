@@ -51,4 +51,25 @@ describe("RhythmChecker", function() {
     expect(result4.success).toBe(false);
     expect(result4.missesBeat).toBe(true);
   });
+
+  it("applies timing offset compensation", function() {
+    const expectedTimes = [[0, 250], [500, 1000]];
+    const givenTimesLateBy220ms = [[220, 470], [720, 1220]];
+
+    const withoutOffset = RhythmChecker.compare(expectedTimes, givenTimesLateBy220ms, {
+      barDuration: 3000,
+      eighthNotes: true,
+      sixteenthNotes: false,
+      offsetMs: 0,
+    });
+    expect(withoutOffset.success).toBe(false);
+
+    const withOffset = RhythmChecker.compare(expectedTimes, givenTimesLateBy220ms, {
+      barDuration: 3000,
+      eighthNotes: true,
+      sixteenthNotes: false,
+      offsetMs: 220,
+    });
+    expect(withOffset.success).toBe(true);
+  });
 });

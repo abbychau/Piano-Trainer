@@ -16,6 +16,7 @@ export default class MidiService {
       errorCallback,
       errorResolveCallback,
       noteOnCallback,
+      noteOffCallback,
       mocked,
     } = opts;
 
@@ -24,6 +25,7 @@ export default class MidiService {
     this.errorCallback = errorCallback || _.noop;
     this.errorResolveCallback = errorResolveCallback || _.noop;
     this.noteOnCallback = noteOnCallback || _.noop;
+    this.noteOffCallback = noteOffCallback || _.noop;
 
     this.receivingMidiMessages = false;
     this.initializeInputStates();
@@ -85,6 +87,7 @@ export default class MidiService {
     if (intensity === 0) {
       this.lastNoteOffAtByKey[keyNumber] = now;
       delete this.currentInputState[keyNumber];
+      this.noteOffCallback(keyNumber);
     } else {
       this.currentInputState[keyNumber] = true;
     }

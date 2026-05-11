@@ -58,6 +58,24 @@ export default class RythmSettingsView extends Component {
           onChange={this.buildStateChanger("barDuration")}
           label={"Bar duration"}
         />
+        <RangeSettingComponent
+          rangeMin={-300}
+          rangeMax={300}
+          values={this.props.settings.offsetMs}
+          onChange={this.buildStateChanger("offsetMs")}
+          valueToString={value => `${value}ms`}
+          label={"Timing offset"}
+        />
+        <SettingLine className="setting_checkbox" label="Subdivision click">
+          <input
+            type="checkbox"
+            checked={this.props.settings.metronomeUseSubdivisionClick}
+            id="rhythm_metronome_subdivision_checkbox"
+            name="check"
+            onChange={this.buildCheckboxStateChanger("metronomeUseSubdivisionClick")}
+          />
+          <label htmlFor="rhythm_metronome_subdivision_checkbox" />
+        </SettingLine>
 
         <SettingLine className="setting_checkbox" label="Label beats">
           <input

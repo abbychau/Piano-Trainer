@@ -44,6 +44,9 @@ export default {
     return source;
   },
   play: function(delay, accent) {
+    if (audioCtx.state === "suspended") {
+      audioCtx.resume();
+    }
     const source = this.createAudioNode(accent);
     source.start(audioCtx.currentTime + delay / 1000);
     return source;

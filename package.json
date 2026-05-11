@@ -11,6 +11,7 @@
   "license": "MIT",
   "homepage": "https://github.com/philippotto/Piano-Trainer",
   "dependencies": {
+    "@tonejs/piano": "^0.2.0",
     "bootstrap": "^3.3.6",
     "chartist": "^0.9.7",
     "classnames": "^2.2.3",
@@ -24,17 +25,18 @@
     "react-bootstrap": "^0.31.1",
     "react-dom": "^16.0.0",
     "react-motion": "^0.5.0",
+    "tone": "^14.9.17",
     "vexflow": "^1.2.41"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^4.7.0",
+    "@vitejs/plugin-react": "^6.0.1",
     "eslint": "^3.14.1",
     "eslint-plugin-react": "^7.4.0",
-    "less": "^2.6.0",
+    "jsdom": "^25.0.1",
+    "less": "^4.6.4",
     "prettier": "^1.7.4",
-    "vite": "^5.4.19",
-    "vitest": "^2.1.8",
-    "jsdom": "^25.0.1"
+    "vite": "^8.0.11",
+    "vitest": "^2.1.8"
   },
   "scripts": {
     "dev": "vite",

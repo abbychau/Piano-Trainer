@@ -39,35 +39,42 @@ export default {
     const barDuration = settings.barDuration;
     const shortestNote = this.getShortestNote(settings);
 
+    const offsetMs = settings.offsetMs || 0;
+    const correctedGivenTimes = givenTimes.map(timeRange =>
+      timeRange.map(time => time - offsetMs),
+    );
+
     console.log("expectedTimes", JSON.stringify(expectedTimes));
-    console.log("givenTimes", JSON.stringify(givenTimes));
+    console.log("givenTimes", JSON.stringify(correctedGivenTimes));
 
     const onTolerance = barDuration / (shortestNote * 2);
     const offTolerance = onTolerance * 2;
     for (let i = 0; i < expectedTimes.length; i++) {
-      if (i >= givenTimes.length) {
+      if (i >= correctedGivenTimes.length) {
         missesBeat = true;
         break;
       }
 
-      const startDiff = expectedTimes[i][0] - givenTimes[i][0];
-      const endDiff = expectedTimes[i][1] - givenTimes[i][1];
+      const startDiff = expectedTimes[i][0] - correctedGivenTimes[i][0];
+      const endDiff = expectedTimes[i][1] - correctedGivenTimes[i][1];
       let correct = true;
       if (Math.abs(startDiff) > onTolerance) {
-        console.warn(expectedTimes[i][0], "-", givenTimes[i][0], " = ", startDiff);
+        console.warn(expectedTimes[i][0], "-", correctedGivenTimes[i][0], " = ", startDiff);
         correct = false;
       }
       // positive time -> released too early -> be a bit more tolerant
       if (endDiff > offTolerance || endDiff < -1 * onTolerance) {
-        console.warn(expectedTimes[i][1], "-", givenTimes[i][1], " = ", endDiff);
+        console.warn(expectedTimes[i][1], "-", correctedGivenTimes[i][1], " = ", endDiff);
         correct = false;
       }
       beatEvaluations.push({ startDiff, endDiff, correct });
     }
 
-    if (givenTimes.length > expectedTimes.length) {
+    if (correctedGivenTimes.length > expectedTimes.length) {
       beatEvaluations = beatEvaluations.concat(
-        givenTimes.slice(expectedTimes.length).map(() => ({ superfluous: true, correct: false })),
+        correctedGivenTimes
+          .slice(expectedTimes.length)
+          .map(() => ({ superfluous: true, correct: false })),
       );
     }
 

@@ -2,62 +2,17 @@ import Chartist from "chartist";
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Tooltip, OverlayTrigger } from "react-bootstrap";
-import _ from "lodash";
+import LevelView from "./level_view.jsx";
+import CollapsableContainer from "./collapsable_container.jsx";
 
-import AnimatedNumber from "./animated_number.js";
-import StarAnimation from "./star_animation.js";
+import AnimatedNumber from "./animated_number.jsx";
+import StarAnimation from "./star_animation.jsx";
 
-export default class RhythmStatisticView extends Component {
+export default class PitchStatisticView extends Component {
   static propTypes = {
     statisticService: PropTypes.object.isRequired,
+    settings: PropTypes.object.isRequired,
   };
-
-  constructor(props) {
-    super(props);
-  }
-
-  getHumanReadableTime(milliseconds) {
-    const seconds = milliseconds / 1000;
-    return [
-      {
-        amount: Math.floor(seconds / 31536000),
-        unit: "y",
-      },
-      {
-        amount: Math.floor((seconds % 31536000) / 86400),
-        unit: "d",
-      },
-      {
-        amount: Math.floor(((seconds % 31536000) % 86400) / 3600),
-        unit: "h",
-      },
-      {
-        amount: Math.floor((((seconds % 31536000) % 86400) % 3600) / 60),
-        unit: "m",
-      },
-      {
-        amount: (((seconds % 31536000) % 86400) % 3600) % 60,
-        unit: "s",
-      },
-    ]
-      .filter(el => el.amount !== 0)
-      .map(el => `${Math.ceil(el.amount)} ${el.unit}`)
-      .join(" ");
-  }
-
-  componentDidMount() {
-    this.refreshFunction = this.forceUpdate.bind(this);
-    this.props.statisticService.on("update", this.refreshFunction);
-    this.drawDiagram();
-  }
-
-  componentDidUpdate() {
-    this.drawDiagram();
-  }
-
-  componentWillUnmount() {
-    this.props.statisticService.off("update", this.refreshFunction);
-  }
 
   render() {
     const statistics = this.props.statisticService;
@@ -73,6 +28,7 @@ export default class RhythmStatisticView extends Component {
           }}
           className="semi-transparent ct-chart ct-major-eleventh"
         />
+
         <div className="row around-xs">
           <div className="col-xs">
             <OverlayTrigger
@@ -86,15 +42,12 @@ export default class RhythmStatisticView extends Component {
             </OverlayTrigger>
           </div>
           <div className="col-xs">
-            <OverlayTrigger
-              placement="top"
-              overlay={<Tooltip id="avgTime">Total time you played rhythms</Tooltip>}
-            >
+            <OverlayTrigger placement="top" overlay={<Tooltip id="avgTime">Average time</Tooltip>}>
               <span className="stat-detail">
                 <i className="fa fa-clock-o" />
                 <AnimatedNumber
-                  number={statistics.getTotalRhythmTime()}
-                  formatter={this.getHumanReadableTime}
+                  number={statistics.getAverageTimeOfLast(50) / 1000}
+                  formatter={el => el.toFixed(2) + "s"}
                 />
               </span>
             </OverlayTrigger>
@@ -102,13 +55,11 @@ export default class RhythmStatisticView extends Component {
           <div className="col-xs">
             <OverlayTrigger
               placement="top"
-              overlay={<Tooltip id="playedChordsAndNotes">Played bars / played beats</Tooltip>}
+              overlay={<Tooltip id="playedChordsAndNotes">Played notes</Tooltip>}
             >
               <span className="stat-detail">
                 <i className="fa fa-music" />
-                <AnimatedNumber number={statistics.getTotalAmountOfRhythms()} />
-                /
-                <AnimatedNumber number={statistics.getTotalAmountOfBeats()} />
+                <AnimatedNumber number={statistics.getTotalAmountOfKeys()} />
               </span>
             </OverlayTrigger>
           </div>
@@ -119,31 +70,28 @@ export default class RhythmStatisticView extends Component {
             >
               <span className="stat-detail">
                 <i className="fa fa-trophy" />
-                <AnimatedNumber number={statistics.getSuccessRate() * 100} />
+                <AnimatedNumber
+                  number={statistics.getSuccessRate()}
+                  formatter={el => el.toFixed(2) * 100}
+                />
                 %
               </span>
             </OverlayTrigger>
           </div>
         </div>
+        <CollapsableContainer collapsed={!this.props.settings.useAutomaticDifficulty}>
+          <LevelView statisticService={this.props.statisticService} />
+        </CollapsableContainer>
       </div>
     );
   }
 
-  drawDiagram() {
+  componentDidUpdate() {
     const statistics = this.props.statisticService;
-    const currentScore = statistics.getCurrentScore();
-    const lastScores = statistics.getLastScores(100);
-
-    const scoreBeforeLastHundred = currentScore - _.sum(lastScores);
-
-    const scoreDevelopmentValues = [scoreBeforeLastHundred];
-    lastScores.forEach(el => {
-      scoreDevelopmentValues.push(el + scoreDevelopmentValues.slice(-1)[0]);
-    });
 
     const data = {
       labels: [],
-      series: [scoreDevelopmentValues],
+      series: [statistics.getLastTimes(100)],
     };
 
     const options = {
@@ -155,12 +103,12 @@ export default class RhythmStatisticView extends Component {
       },
       axisY: {
         labelInterpolationFnc: function(value) {
-          return value;
+          return value / 1000 + "s";
         },
       },
     };
 
-    if (this.chart && scoreDevelopmentValues.length > 1) {
+    if (this.chart && statistics.getSuccessCount() > 1) {
       Chartist.Line(this.chart, data, options);
     }
   }

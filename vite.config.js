@@ -1,35 +1,34 @@
-import { defineConfig, transformWithEsbuild } from "vite";
+import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { resolve } from "path";
 
 export default defineConfig({
+  oxc: {
+    include: /\.(m?js|[jt]sx)$/,
+    exclude: [],
+    jsx: { runtime: "classic" },
+  },
   plugins: [
-    {
-      name: "treat-js-files-as-jsx",
-      async transform(code, id) {
-        const normalizedId = id.replace(/\\/g, "/");
-        if (!normalizedId.includes("/app/scripts/") || !normalizedId.endsWith(".js")) {
-          return null;
-        }
-        return transformWithEsbuild(code, normalizedId, {
-          loader: "jsx",
-          jsx: "transform",
-        });
-      },
-    },
-    react(),
+    react({
+      include: /app\/scripts\/.*\.[jt]sx?$/,
+    }),
   ],
   server: {
     port: 1234,
   },
   optimizeDeps: {
-    esbuildOptions: {
-      loader: {
+    rolldownOptions: {
+      moduleTypes: {
         ".js": "jsx",
       },
     },
   },
   build: {
+    rolldownOptions: {
+      moduleTypes: {
+        ".js": "jsx",
+      },
+    },
     outDir: "build",
     emptyOutDir: true,
   },

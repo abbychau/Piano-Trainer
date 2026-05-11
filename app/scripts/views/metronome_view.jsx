@@ -4,7 +4,7 @@ import classNames from "classnames";
 import _ from "lodash";
 
 import MetronomeService from "../services/metronome_service.js";
-import CollapsableContainer from "./collapsable_container.js";
+import CollapsableContainer from "./collapsable_container.jsx";
 
 export default class MetronomeView extends Component {
   static propTypes = {
@@ -30,6 +30,9 @@ export default class MetronomeView extends Component {
     const startTime = now + delay;
     console.log("startTime", startTime);
     const beatAmount = 8;
+    const useSubdivision = !this.props.settings.metronomeUseSubdivisionClick;
+    const ticksPerBeat = useSubdivision ? 2 : 1;
+    const totalTicks = beatAmount * ticksPerBeat;
     const metronomeSoundLength = 180; // ms
     // Not sure when exactly the metronome beat is anticipated by a human
     // E.g. exactly on the first millisecond? For now I'm assuming at 1/3 of
@@ -39,19 +42,21 @@ export default class MetronomeView extends Component {
     this.firstBarBeatTime =
       startTime + 4 * beatLength + metronomeSoundLength * magicPercentileOfAudibleBeat;
 
-    _.range(beatAmount + 1).map(beatIndex => {
-      const beatTime = startTime + beatIndex * beatLength;
-      const delay = beatTime - now;
+    _.range(totalTicks + 1).map(tickIndex => {
+      const tickTime = startTime + tickIndex * (beatLength / ticksPerBeat);
+      const delay = tickTime - now;
+      const isMainBeat = tickIndex % ticksPerBeat === 0;
+      const beatIndex = Math.floor(tickIndex / ticksPerBeat);
 
-      if (beatIndex < beatAmount) {
-        MetronomeService.play(delay);
+      if (tickIndex < totalTicks) {
+        MetronomeService.play(delay, !isMainBeat);
       }
       setTimeout(() => {
         this.setState({
-          currentMetronomeBeat: beatIndex < 4 ? beatIndex : -1,
+          currentMetronomeBeat: isMainBeat && beatIndex < 4 ? beatIndex : -1,
         });
 
-        if (beatIndex === beatAmount) {
+        if (tickIndex === totalTicks) {
           this.props.onMetronomeEnded();
         }
       }, delay);

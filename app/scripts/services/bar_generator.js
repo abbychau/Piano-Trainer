@@ -33,6 +33,33 @@ function randomInvokeAOrB(probability, functionA, functionB) {
   return functionB();
 }
 
+function noteOptionToKeyString(noteOption) {
+  if (_.isString(noteOption)) {
+    return noteOption;
+  }
+  if (!noteOption || !noteOption.note) {
+    return null;
+  }
+  if (!noteOption.modifier) {
+    return noteOption.note;
+  }
+  const [note, octave] = noteOption.note.split("/");
+  return `${note}${noteOption.modifier}/${octave}`;
+}
+
+function keyStringToDiatonicStepIndex(clef, keyString) {
+  if (!keyString) {
+    return null;
+  }
+  const canonical = KeyConverter.getCanonicalKeyString(keyString);
+  const match = canonical.match(/^([a-g])[#b]*\/(\d+)$/);
+  if (!match) {
+    return null;
+  }
+  const naturalKey = `${match[1]}/${match[2]}`;
+  return getClefNotes(clef).indexOf(naturalKey);
+}
+
 export default {
   getPitchExerciseLength: function(settings) {
     const value = parseInt(settings && settings.exerciseLength, 10);
@@ -161,6 +188,10 @@ export default {
 
   generateBars: function(settings, level, onePerTime) {
     const chordsPerBar = this.getPitchExerciseLength(settings);
+    const previousNoteSetByClef = {
+      treble: null,
+      bass: null,
+    };
     const [trebleNotes, bassNotes] = _.unzip(
       _.range(0, chordsPerBar).map(() => {
         const generatePossibleNotes = clef => {
@@ -186,10 +217,25 @@ export default {
         // trebleAmount bassAmount
         // if length === 0 then amounts cannot be more than 0
 
-        return [
-          this.generateNotesForBeat(settings, "treble", trebleAmount, possibleTrebleNotes),
-          this.generateNotesForBeat(settings, "bass", bassAmount, possibleBassNotes),
-        ];
+        const trebleNote = this.generateNotesForBeat(
+          settings,
+          "treble",
+          trebleAmount,
+          possibleTrebleNotes,
+          previousNoteSetByClef.treble,
+        );
+        const bassNote = this.generateNotesForBeat(
+          settings,
+          "bass",
+          bassAmount,
+          possibleBassNotes,
+          previousNoteSetByClef.bass,
+        );
+
+        previousNoteSetByClef.treble = trebleAmount > 0 ? trebleNote.getKeys() : null;
+        previousNoteSetByClef.bass = bassAmount > 0 ? bassNote.getKeys() : null;
+
+        return [trebleNote, bassNote];
       }),
     );
 
@@ -232,7 +278,44 @@ export default {
     return options.maximumInterval >= _.max(keyNumbers) - _.min(keyNumbers);
   },
 
-  generateNotesForBeat(settings, clef, amount, possibleNotes) {
+  limitPossibleNotesByMaxDistance(clef, possibleNotes, previousNoteSet, maxDistance) {
+    if (!previousNoteSet || maxDistance == null || maxDistance < 0) {
+      return possibleNotes;
+    }
+
+    const previousIndexes = previousNoteSet
+      .map(noteOptionToKeyString)
+      .map(keyString => keyStringToDiatonicStepIndex(clef, keyString))
+      .filter(index => index > -1);
+    if (previousIndexes.length === 0) {
+      return possibleNotes;
+    }
+
+    const isWithinDistance = noteOption => {
+      const keyString = noteOptionToKeyString(noteOption);
+      const index = keyStringToDiatonicStepIndex(clef, keyString);
+      if (index == null || index < 0) {
+        return true;
+      }
+      return previousIndexes.some(previousIndex => Math.abs(previousIndex - index) <= maxDistance);
+    };
+
+    if (_.isArray(possibleNotes)) {
+      const limited = possibleNotes.filter(isWithinDistance);
+      return limited.length > 0 ? limited : possibleNotes;
+    }
+
+    const limited = {
+      new: possibleNotes.new.filter(isWithinDistance),
+      old: possibleNotes.old.filter(isWithinDistance),
+    };
+    if (limited.new.length === 0 && limited.old.length === 0) {
+      return possibleNotes;
+    }
+    return limited;
+  },
+
+  generateNotesForBeat(settings, clef, amount, possibleNotes, previousNoteSet) {
     const chordsPerBar = this.getPitchExerciseLength(settings);
     if (amount === 0) {
       const rest = new Vex.Flow.StaveNote({
@@ -243,9 +326,17 @@ export default {
       return rest;
     }
 
-    let randomNoteSet = this.generateNoteSet(settings, amount, possibleNotes);
+    const maxDistance = parseInt(settings.maxDistance, 10);
+    const limitedPossibleNotes = this.limitPossibleNotesByMaxDistance(
+      clef,
+      possibleNotes,
+      previousNoteSet,
+      maxDistance,
+    );
+
+    let randomNoteSet = this.generateNoteSet(settings, amount, limitedPossibleNotes);
     while (!this.ensureInterval(randomNoteSet)) {
-      randomNoteSet = this.generateNoteSet(settings, amount, possibleNotes);
+      randomNoteSet = this.generateNoteSet(settings, amount, limitedPossibleNotes);
     }
 
     const staveChord = new Vex.Flow.StaveNote({

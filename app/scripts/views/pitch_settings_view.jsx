@@ -75,6 +75,7 @@ export default class PitchSettingsView extends Component {
         treble: [0, 7],
         bass: [0, 13],
       },
+      maxDistance: 13,
       successSoundVolume: 70,
       playReferenceSound: true,
       referenceSoundVolume: 55,
@@ -320,6 +321,14 @@ export default class PitchSettingsView extends Component {
           onChange={this.buildStateChanger("noteRanges.bass")}
           valueToString={index => this.pitchRangeValueToString("bass", index)}
           label={"Bass note range:"}
+        />
+        <RangeSettingComponent
+          rangeMin={0}
+          rangeMax={13}
+          values={this.props.settings.maxDistance}
+          onChange={this.buildStateChanger("maxDistance")}
+          valueToString={el => `${el}`}
+          label={"Step limit:"}
         />
         <RangeSettingComponent
           rangeMin={0}
