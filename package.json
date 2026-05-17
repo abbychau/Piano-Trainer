@@ -42,6 +42,7 @@
     "dev": "vite",
     "start": "vite",
     "build": "vite build",
+    "postbuild": "node -e \"require('fs').copyFileSync('build/index.html', 'build/404.html')\"",
     "lint": "eslint . && prettier --list-different '**/*.{js,jsx,ts,css,less,scss,json}'",
     "test": "vitest run",
     "test:watch": "vitest",
