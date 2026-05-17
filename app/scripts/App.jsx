@@ -10,6 +10,14 @@ import { Nav, NavItem } from "react-bootstrap";
 
 import pianoBackgroundJpg from "../images/piano-background.jpg";
 
+// Get the base path of the application (supports deployment in subfolders)
+function getBasePath() {
+  // import.meta.env.BASE_URL is provided by Vite and always ends with '/'
+  const base = import.meta.env.BASE_URL || "/";
+  // Remove trailing slash for path construction
+  return base.endsWith("/") ? base.slice(0, -1) : base;
+}
+
 export default class App extends Component {
   constructor(props, context) {
     super(props, context);
@@ -21,23 +29,27 @@ export default class App extends Component {
   }
 
   getGameFromPath(pathname) {
-    if (pathname === "/rhythm") {
+    const base = getBasePath();
+    // Strip the base path from the pathname to get the relative path
+    const path = base ? pathname.replace(base, "") || "/" : pathname;
+    if (path === "/rhythm") {
       return "rhythm";
     }
-    if (pathname === "/recorder") {
+    if (path === "/recorder") {
       return "recorder";
     }
     return "pitch";
   }
 
   getPathFromGame(game) {
+    const base = getBasePath();
     if (game === "rhythm") {
-      return "/rhythm";
+      return base + "/rhythm";
     }
     if (game === "recorder") {
-      return "/recorder";
+      return base + "/recorder";
     }
-    return "/pitch";
+    return base + "/pitch";
   }
 
   selectGame(newGame, shouldPushHistory = true) {
